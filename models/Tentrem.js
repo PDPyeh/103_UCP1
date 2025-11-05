@@ -1,4 +1,3 @@
-// models/tentram.js
 module.exports = (sequelize, DataTypes) => {
   const Tentrem = sequelize.define('Tentrem', {
     Tipe_Kamar: { type: DataTypes.STRING, allowNull: false },
