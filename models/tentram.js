@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     Tipe_Kamar: {
-      type: DataTypes.string,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     Kapasitas_Tamu: {
@@ -15,11 +15,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     Lantai: {
-      type: DataTypes.string,
+      type: DataTypes.STRING,
       allowNull: false
     },
     Fasilitas: {
-      type: DataTypes.string,
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    Tanggal_Pesan: {
+      type: DataTypes.DATE,
       allowNull: false
     },
   }, {
