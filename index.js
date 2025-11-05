@@ -1,65 +1,61 @@
 const express = require('express');
-const app = express();
-const port = 3001;
 const db = require('./models');
+const app = express();
+const port = 3003;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+// Routes
+app.post('/hotel', async (req, res) => {
+  try {
+    const hotel = await db.Tentrem.create(req.body);
+    res.status(201).json(hotel);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
 });
 
-db.sequelize.sync().then(() => {
-  console.log('Database synchronized');
-}).catch((err) => {
-  console.error('Error synchronizing database:', err);
+app.get('/hotel', async (_req, res) => {
+  try {
+    const hotels = await db.Tentrem.findAll();
+    res.json(hotels);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve Kamar' });
+  }
 });
 
-app.post('/tentram', async (req, res) => {
-    try {
-        const Tentram = await db.Tentram.create(req.body);
-        res.status(201).json(Tentram);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
+app.put('/hotel/:id', async (req, res) => {
+  try {
+    const hotel = await db.Tentrem.findByPk(req.params.id);
+    if (!hotel) return res.status(404).json({ error: 'Kamar not found' });
+    await hotel.update(req.body);
+    res.json({ message: 'Kamar updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update Kamar' });
+  }
 });
 
-
-app.get('/tentram', async (req, res) => {
-    try {
-        const tentrams = await db.Tentram.findAll();
-        res.send(tentrams);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to retrieve kamar' });
-    }
+app.delete('/hotel/:id', async (req, res) => {
+  try {
+    const hotel = await db.Tentrem.findByPk(req.params.id);
+    if (!hotel) return res.status(404).json({ error: 'Kamar not found' });
+    await hotel.destroy();
+    res.json({ message: 'Kamar deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete Kamar' });
+  }
 });
 
-app.put('/tentram/:id', async (req, res) => {
-    const id = req.params.id;
-    const data = req.body;
-    try {
-        const tentram = await db.Tentram.findByPk(id);
-        if (!tentram) {
-            return res.status(404).json({ error: 'kamar not found' });
-        }
-        await tentram.update(data);
-        res.send({message: 'kamar updated successfully'});
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to update kamar' });
-    }
-});
-
-app.delete('/tentram/:id', async (req, res) => {
-    const id = req.params.id;
-    try {
-        const tentram = await db.Komik.findByPk(id);
-        if (!tentram) {
-            return res.status(404).json({ error: 'kamar not found' });
-        }
-        await tentram.destroy();
-        res.send({ message: 'kamar deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to delete kamar' });
-    }
-});
+// Start AFTER sync
+db.sequelize.sync()
+  .then(() => {
+    console.log('Database synchronized');
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
+  })
+  .catch(err => {
+    console.error('Error synchronizing database:', err);
+  });
