@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Tentram = sequelize.define('Komik', {
+  const Tentram = sequelize.define('hotel', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true, 
@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     Tipe_Kamar: {
-      type: DataTypes.VARCHAR(50),
+      type: DataTypes.string,
       allowNull: false
     },
     Kapasitas_Tamu: {
@@ -15,11 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     Lantai: {
-      type: DataTypes.VARCHAR(50),
+      type: DataTypes.string,
       allowNull: false
     },
     Fasilitas: {
-      type: DataTypes.VARCHAR(50),
+      type: DataTypes.string,
       allowNull: false
     },
   }, {
